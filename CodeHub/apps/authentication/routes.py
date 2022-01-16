@@ -101,6 +101,7 @@ def profile(*args):
 
     return render_template("accounts/profile.html", username = username)
 
+## TODO: Design a database for user and store token whether the token is valid or not
 @blueprint.route("/logout", methods=["GET", "POST"])
 @token_required
 def logout(*args):
