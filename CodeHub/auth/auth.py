@@ -1,8 +1,11 @@
+import os
 import json
 from configparser import ConfigParser
-from ldap3 import Connection, Server, SIMPLE, SUBTREE, SYNC, MODIFY_REPLACE
+from ldap3 import Connection, Server, SIMPLE, SUBTREE, SYNC, NTLM
 
-__SETTINGS_PATH__ ="ldap.ini"
+
+BASE_DIR = os.path.dirname(__file__)
+__SETTINGS_PATH__ =os.path.join(BASE_DIR, "ldap.ini")
 
 def get_config():
     config = ConfigParser()
@@ -23,30 +26,44 @@ def find_user_dn(conf, conn, uid):
     conn.search(conf['base'], "(%s)" % search_filter, SUBTREE)
     return conn.response[0]['dn'] if conn.response else None
 
+def find_usermail_dn(conf, conn, uid):
+    search_filter = conf["search_filter"].replace('uid', "mail")
+    search_filter = search_filter.replace('{mail}', uid)
+    conn.search(conf['base'], "(%s)" % search_filter, SUBTREE)
+    return conn.response[0]['dn'] if conn.response else None
 
-def auth_ldap(username, password):
+
+def auth_ldap(username, password, mail:bool=False):
     config = get_config()["ldap"]
     with connect_ldap(config, client_strategy=SYNC) as c:
-        c.open()
+        c.bind()
         try:
-            user_dn = find_user_dn(config, c, username)
+            if mail == False:
+                user_dn = find_user_dn(config, c, username)
+            else:
+                user_dn = find_usermail_dn(config, c, username)
+            if user_dn == None:
+                return False
         except Exception as e:
             return False
         try:
             connection = connect_ldap(conf=config, user=user_dn, password=password)
-        except Exception as e:
+        except:
             return False
-    if connection.bind():
-        return True
-    else:
-        return False
+        if connection.bind() == True:
+            return True
+        else:
+            return False
 
 
 def change_password_ldap(username, old_pass, new_pass):
     config = get_config()["ldap"]
     with connect_ldap(config) as c:
         c.bind()
-        user_dn = find_user_dn(config, c, username)
+        try:
+            user_dn = find_user_dn(config, c, username)
+        except Exception as e:
+            return False
         c.unbind()
     # Note: raises LDAPUserNameIsMandatoryError when user_dn is None.
     with connect_ldap(config,
@@ -54,6 +71,11 @@ def change_password_ldap(username, old_pass, new_pass):
                       user=user_dn,
                       password=old_pass) as c:
         c.bind()
-        c.extend.standard.modify_password(user_dn, old_pass, new_pass)
-        c.unbind()
-        return True
+        try:
+            c.extend.standard.modify_password(user_dn, old_pass, new_pass)
+            c.unbind()
+            return True
+        except Exception as e:
+            return False
+
+

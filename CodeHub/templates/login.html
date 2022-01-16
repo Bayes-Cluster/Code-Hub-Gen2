@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}USBC | Sign In {% endblock %}
+
+{% block body %}
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <img src="/static/img/cluster-1.jfif"
+                    class="img-fluid" alt="Sample image">
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form action="{{ url_for('login') }}" method="post">
+                    <div class="divider d-flex align-items-center my-4">
+                        <h3 class="text-center fw-bold mx-3 mb-0">Sign In</h3>
+                    </div>
+                    <!-- Email input -->
+                    <div class="form-outline mb-4">
+                        <input type="text" id="username-mail" class="form-control"
+                            placeholder="Enter a valid email address or username" name="username"
+                            value="{{ request.form.username }}" />
+                        <label class=" form-label" for="username-mail">Email or Username</label>
+                    </div>
+                    <!-- Password input -->
+                    <div class="form-outline mb-3">
+                        <input type="password" id="password" class="form-control" placeholder="Enter password"
+                            name="password" value="{{ request.form.password }}" />
+                        <label class="form-label" for="password">Password</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Checkbox -->
+                        <div class="form-check mb-0">
+                            <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
+                            <label class="form-check-label" for="form2Example3">
+                                Remember me
+                            </label>
+                        </div>
+                        <a href="#!" class="text-body">Forgot password?</a>
+                    </div>
+
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <button type="submit" class="btn btn-primary btn-lg"
+                            style="padding-left: 2.5rem; padding-right: 2.5rem;" value="Login">Login</button>
+                        <p class="small fw-bold mt-2 pt-1 mb-0"> Don't have an account? <a href="mailto:bayes@uicstat.com"
+                                class="link-danger"> Contact to the Administrator </a></p>
+                    </div>
+                    {% if login_error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ login_error }}
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
