@@ -3,7 +3,8 @@
 
 ## Tech Stack
 
- * Frontend: [Bootstrap4](https://getbootstrap.com/) or [Vue](https://vuejs.org/)
+ * Frontend: [Bootstrap5](https://getbootstrap.com/)
+    * Data Dashboard: [Chart.js](https://www.chartjs.org/)
  * Backend: [Flask](https://flask.palletsprojects.com/en/2.0.x/)
  * Database: [MariaDB](https://mariadb.org/)
 
