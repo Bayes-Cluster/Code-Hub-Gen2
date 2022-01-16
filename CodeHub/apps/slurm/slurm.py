@@ -2,14 +2,10 @@ import os
 import subprocess
 import pandas as pd
 from datetime import datetime
-from flask import abort, Flask, abort, request, jsonify, render_template
-
-app = Flask(__name__)
 
 
 ## sinfo
-def py_sinfo():
-    output_format = request.args.get("format")
+def py_sinfo() -> pd.DataFrame:
     sinfo = subprocess.run(["sinfo", "-l"],
                            stdout=subprocess.PIPE)  ## binary string
     # print(sinfo.stdout.decode("ascii"))
@@ -24,20 +20,10 @@ def py_sinfo():
     pd_sinfo = pd.DataFrame(pd_sinfo)
     header = pd_sinfo.iloc[0]
     sinfo = pd.DataFrame(pd_sinfo.values[1:], columns=header)
-
-    if output_format == "table":
-        return render_template("../template/table.html",
-                               table=sinfo.to_html(index=True))
-    elif output_format == "json":
-        return sinfo.to_json()
-    else:
-        return abort(404)
+    return sinfo
 
 
-def py_job(username):
-    startdate = request.args.get("startdate", None)
-    enddate = request.args.get("enddate", None)
-    status = request.args.get("status", None)
+def py_sacct(username:str, startdate:str, enddate:str) -> pd.DataFrame:
     startdate = datetime.strptime(startdate, "%Y%m%d").strftime("%Y-%m-%d")
     enddate = datetime.strptime(enddate, "%Y%m%d").strftime("%Y-%m-%d")
     #sjob = subprocess.run(["sacct","-u", "{}".format(username)], stdout = subprocess.PIPE)
@@ -56,18 +42,20 @@ def py_job(username):
     pd_sjob = pd.DataFrame(pd_sjob)
     header = pd_sjob.iloc[0]
     pd_sjob = pd.DataFrame(pd_sjob.values[1:], columns=header)
+    return pd_sjob.to_json()
 
-    return render_template("../template/table.html",
-                           table=pd_sjob.to_html(index=True))
-    #return pd_sjob.to_json()
+def py_squeue(username:str=None):
+    if username == None:
+        squeue = subprocess.run(["squeue"], stdout=subprocess.PIPE)
+    else:
+        squeue = subprocess.run(["squeue", "--user", "{}".format(username)], stdout=subprocess.PIPE)
+    squeue = squeue.stdout.decode("ascii").split("\n")
+    out_length = (squeue[:-1])
+    pd_squeue = []
+    for i in range(0, len(out_length)):
+        pd_squeue.append(squeue[i].split())
+    pd_squeue = pd.DataFrame(pd_squeue)
+    header = pd_squeue.iloc[0]
+    pd_squeue = pd.DataFrame(pd_squeue.values[1:], columns=header)
+    return pd_squeue.to_json()
 
-
-if __name__ == '__main__':
-    '''
-  sinfo = py_sinfo()
-  print("sinfo:\n", sinfo)
-  sjob = ("sjob", py_job("terencelau"))
-  print("your tasks/jobs:\n", sjob)
-  '''
-    #app.run()
-    app.run(host="0.0.0.0", port=8076, debug=True)

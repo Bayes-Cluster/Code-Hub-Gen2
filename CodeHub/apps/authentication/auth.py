@@ -1,7 +1,7 @@
 import os
 import json
 from configparser import ConfigParser
-from ldap3 import Connection, Server, SIMPLE, SUBTREE, SYNC, NTLM
+from ldap3 import Connection, Server, SIMPLE, SUBTREE, SYNC
 
 
 BASE_DIR = os.path.dirname(__file__)

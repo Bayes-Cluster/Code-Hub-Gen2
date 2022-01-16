@@ -1,34 +1,22 @@
-from importlib_metadata import re
 import jwt
 import datetime
-from auth.auth import *
-from functools import wraps
-from flask import Flask, jsonify, render_template, render_template_string
-from flask import make_response, redirect, url_for, flash, abort
-from flask import request, session
 
-app = Flask(__name__)
-app.config["SECRET_KEY"] = "8QAJbYIlGEjN52MhkAytpLH0qPHcx9SbizUVMN7JJrc="
-app.config["EXP_TIME"] = int(600)
+from functools import wraps
+from flask import request
+from apps.authentication import blueprint
+from apps.authentication.auth import *
+from flask import Flask, jsonify, render_template
+from flask import  redirect, url_for
+
+SECRET_KEY = "8QAJbYIlGEjN52MhkAytpLH0qPHcx9SbizUVMN7JJrc="
+EXP_TIME = int(600)
+
 """
 import os, base64
 generate secret key
 def generate_secret():
     return base64.b64encode(os.urandom(32)).decode("ascii")
 """
-
-"""
-error handler
-"""
-
-@app.errorhandler(401)
-def page_unauthorized(error):
-    return render_template_string('<h1> Unauthorized </h1><h2>{{ error_info }}</h2>', error_info=error), 401
-
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template_string('<h1> Page Not Found </h1><h2>{{ error_info }}</h2>', error_info=error), 404
-    
 
 def token_required(f):
     @wraps(f)
@@ -40,7 +28,7 @@ def token_required(f):
         else:
             try:
                 data = jwt.decode(token,
-                                  app.config["SECRET_KEY"],
+                                  SECRET_KEY,
                                   algorithms=["HS256"])
             except Exception as e:
                 return jsonify({"message": "Token is invalid"}), 401
@@ -50,18 +38,19 @@ def token_required(f):
     return decorated
 
 
-@app.route("/")
+@blueprint.route('/')
 def homepage():
-    return render_template("home.html")
+    return redirect(url_for('authentication_blueprint.login'))
 
-@app.route("/login", methods=["GET", "POST"])
+@blueprint.route("/login", methods=["GET", "POST"])
 def login():
+    login_error = None
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
         if username == "" or password == "":
             login_error = "Username or password is missing"
-            return render_template("login.html", login_error=login_error)
+            return render_template("accounts/login.html", login_error=login_error)
         if "@" in username:
             auth_result = auth_ldap(username, password, mail=True)
         else:
@@ -73,21 +62,21 @@ def login():
                     username,
                     "exp":
                     datetime.datetime.utcnow() +
-                    datetime.timedelta(seconds=app.config["EXP_TIME"])
-                }, app.config["SECRET_KEY"])
+                    datetime.timedelta(seconds=EXP_TIME)
+                }, SECRET_KEY)
             return redirect("/profile?token={}".format(token))
         else:
             login_error = "Invalid username or password"
-            return render_template("login.html", login_error=login_error)
-    return render_template("login.html")
+            return render_template("accounts/login.html", login_error=login_error)
+    return render_template("accounts/login.html", login_error=login_error)
 
 
-@app.route("/profile", methods=["GET", "POST"])
+@blueprint.route("/profile", methods=["GET", "POST"])
 @token_required
 def profile(*args):
     token = request.args['token']
     username = jwt.decode(token,
-                          app.config["SECRET_KEY"],
+                          SECRET_KEY,
                           algorithms=["HS256"])['user']
     username = request.form.get("username")
     old_password = request.form.get("old_password")
@@ -95,15 +84,11 @@ def profile(*args):
     if old_password == None or new_password == None or old_password == new_password:
         modify_notice = "Invlid password or new password is same as current password"
         modify_result = False
-        return render_template("profile.html",
+        return render_template("accounts/profile.html",
                                modify_result=False,
                                modify_notice=modify_notice)
     modify_result = change_password_ldap(username, old_password, new_password)
     if modify_result == True:
-        return render_template("profile.html", modify_result=modify_result)
+        return render_template("accounts/profile.html", modify_result=modify_result)
 
-    return render_template("profile.html", username = username)
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    return render_template("accounts/profile.html", username = username)
