@@ -9,7 +9,7 @@ from apps.authentication.auth import *
 from apps.authentication.forms import *
 
 from flask import request
-from flask import  redirect, url_for
+from flask import  redirect, url_for, session
 from flask import Flask, jsonify, render_template, make_response
 
 SECRET_KEY = "8QAJbYIlGEjN52MhkAytpLH0qPHcx9SbizUVMN7JJrc="
@@ -73,6 +73,7 @@ def login():
             resp = make_response(redirect("profile?token={}".format(token)))
             resp.set_cookie('username', username)
             resp.set_cookie("password", "{}".format(password)) 
+            session['username'] = password
             return resp
         else:
             msg = "Invalid username or password"
@@ -90,20 +91,23 @@ def profile(*args):
     old_password = request.form.get("old_password")
     new_password = request.form.get("new_password")
     if old_password == None or new_password == None or old_password == new_password:
-        modify_notice = "Invlid password or new password is same as current password"
+        msg = "Invlid password or new password is same as current password"
         modify_result = False
         return render_template("accounts/profile.html",
                                modify_result=False,
-                               modify_notice=modify_notice)
+                               msg=msg)
     modify_result = change_password_ldap(username, old_password, new_password)
     if modify_result == True:
         return redirect("/logout?token={}".format(token))
+    else:
+        msg = "Invalid password, please re enter"
+        return render_template("accounts/profile.html", msg=msg)
 
-    return render_template("accounts/profile.html", username = username)
+    return render_template("accounts/profile.html", msg = username)
 
 ## TODO: Design a database for user and store token whether the token is valid or not
 @blueprint.route("/logout", methods=["GET", "POST"])
 @token_required
 def logout(*args):
     token = request.args['token']
-    return jsonify({"token":token})
+    return redirect(url_for('authentication_blueprint.login'))

@@ -36,9 +36,9 @@
                         <button type="submit" class="btn btn-primary btn-lg"
                             style="padding-left: 2.5rem; padding-right: 2.5rem;" value="Submit">Submit</button>
                     </div>
-                    {% if login_error %}
+                    {% if msg %}
                     <div class="alert alert-danger" role="alert">
-                        {{ login_error }}
+                        {{ msg }}
                     </div>
                     {% endif %}
                 </form>
