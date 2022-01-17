@@ -22,6 +22,6 @@ Basically, the Code-Hub has(will have) these three main components:
     2. Auditing
     3. Auto Blocking (Crypto-mining and etc.)
 3. Web-based Coding Interface
-    1. Web Terminal
-    2. Files Management
+    1. Web Terminal ([WebSSH2](https://github.com/billchurch/WebSSH2) with `socketio`) - optional
+    2. Files Management (simple upload + download)
     2. Proxy Service (for `code-server`, `matlab`, `RStudio`, and etc.)
