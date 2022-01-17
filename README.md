@@ -24,4 +24,4 @@ Basically, the Code-Hub has(will have) these three main components:
 3. Web-based Coding Interface
     1. Web Terminal ([WebSSH2](https://github.com/billchurch/WebSSH2) with `socketio`) - optional
     2. Files Management (simple upload + download)
-    2. Proxy Service (for `code-server`, `matlab`, `RStudio`, and etc.)
+    2. Proxy Service (for `code-server`, `MATLAB`, `RStudio`, and etc.)
