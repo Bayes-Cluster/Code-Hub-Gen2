@@ -13,7 +13,6 @@ ldap.ini
 __pycache__/
 *.py[cod]
 *$py.class
-dashboard/
 # C extensions
 *.so
 !
