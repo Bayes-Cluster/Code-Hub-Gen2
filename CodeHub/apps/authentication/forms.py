@@ -13,10 +13,10 @@ from wtforms import StringField, PasswordField, BooleanField
 
 
 class LoginForm(FlaskForm):
-    username = StringField(label="Username or email",
+    username = StringField(label="",
                            id="username",
                            validators=[DataRequired()])
-    password = PasswordField(label="Password",
+    password = PasswordField(label="",
                              id="password",
                              validators=[DataRequired()])
     remember = BooleanField(label="Remember Me", id="remember_me")

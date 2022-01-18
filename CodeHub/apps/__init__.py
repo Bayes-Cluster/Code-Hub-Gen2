@@ -11,7 +11,6 @@ from flask_socketio import SocketIO
 db = SQLAlchemy()
 login_manager = LoginManager()
 socketio = SocketIO(async_mode="eventlet")
-session = Session()
 
 
 def register_extensions(app):
@@ -42,7 +41,6 @@ def create_app(config):
     bootstrap = Bootstrap(main_app)
     db = SQLAlchemy(main_app)
     socketio = SocketIO(main_app)
-    Session(main_app)
     login_manager.init_app(main_app)
     login_manager.login_view = 'login'
     configure_database(main_app)

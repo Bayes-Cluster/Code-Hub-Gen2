@@ -11,9 +11,6 @@ def generate_secret(keylength:int):
 
 secret_key = generate_secret(keylength=128)
 exp_time = int(1800)
-fd = None
-child_pid = None
-cmd = "bash"
 
 class Config(object):
 
