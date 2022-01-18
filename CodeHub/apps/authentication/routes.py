@@ -41,16 +41,13 @@ def login():
         else:
             verification = auth_ldap(username, password, mail=False)
         if verification == True:
-            exp = datetime.datetime.utcnow() + datetime.timedelta(seconds=exp_time)
-            token = jwt.encode({
-                "username": username,
-                "exp": exp,
-            }, secret_key)
-            resp = make_response(redirect("dashboard?token={}".format(token)))
-            resp.set_cookie('username', username)
-            resp.set_cookie("password", "{}".format(password))
+            access_token = token_generate(access=True, secret_key=secret_key, data={"username": username})
+            refresh_token = token_generate(access=False, secret_key=secret_key, data={"username": username})
+            resp = make_response(redirect("dashboard?token={}".format(access_token)))
+            resp.set_cookie('token', refresh_token)
+            resp.set_cookie("password", "{}".format(password)) ## warning: this is not secure
             user_form = Users(username=username,
-                              token=token,
+                              token=refresh_token,
                               token_expiration=False)
             db.session.add(user_form)
             db.session.commit()
