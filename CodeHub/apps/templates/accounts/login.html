@@ -1,70 +1,81 @@
-{% extends "layout/base.html" %}
+{% extends "bootstrap/base.html" %}
+{% block title %}
+USBC | Sign In
+{% endblock %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}USBC | Sign In {% endblock %}
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='css/login.css')}}">
+{% endblock %}
 
-{% block body %}
-<section class="vh-100">
-    <div class="container-fluid h-custom">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-md-9 col-lg-6 col-xl-5">
-                <img src="/static/img/cluster-1.jfif"
-                    class="img-fluid" alt="Sample image">
-            </div>
-            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form action="" method="post">
-                    <div class="divider d-flex align-items-center my-4">
-                        <h3 class="text-center fw-bold mx-3 mb-0">Sign In</h3>
-                    </div>
-                    <!-- Email input -->
-                    <div class="form-outline mb-4">
-                        <!--<input type="text" id="username-mail" class="form-control"
-                            placeholder="Enter a valid email address or username" name="username"
-                            value="{{ request.form.username }}" />-->
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1">
-                                <span class="fas fa-user-circle"></span>
-                            </span>
-                            {{ form.username(placeholder="Username", class="form-control") }}
-                        </div> 
-                        <label class=" form-label" for="username-mail">Email or Username</label>
-                    </div>
-                    <!-- Password input -->
-                    <div class="form-outline mb-3">
-                        <!--<input type="password" id="password" class="form-control" placeholder="Enter password"
-                            name="password" value="{{ request.form.password }}" />-->
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon2">
-                                <span class="fas fa-unlock-alt"></span>
-                            </span>
-                            {{ form.password(placeholder="Password", class="form-control", type="password") }}
-                        </div>  
-                        <label class="form-label" for="password">Password</label>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <!-- Checkbox -->
-                        <div class="form-check mb-0">
-                            <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
-                            <label class="form-check-label" for="form2Example3">
-                                Remember me
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="text-center text-lg-start mt-4 pt-2">
-                        <button type="submit" class="btn btn-primary btn-lg"
-                            style="padding-left: 2.5rem; padding-right: 2.5rem;" value="Login">Login</button>
-                        <p class="small fw-bold mt-2 pt-1 mb-0">Forgot password?  Don't have an account? <a href="mailto:bayes@uicstat.com"
-                                class="link-danger"> Contact to the Administrator </a></p>
-                    </div>
-                    {% if msg %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ msg }}
-                    </div>
-                    {% endif %}
-                </form>
-            </div>
-        </div>
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+        aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('authentication_blueprint.homepage') }}">BNU-HKBU United International College Statistics Bayes Cluster Code-Hub</a>
     </div>
-</section>
+    <div id="navbar" class="navbar-collapse collapse">
+      <!--<ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Settings</a></li>
+        <li><a href="#">Profile</a></li>
+      </ul>-->
+      <!--<form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>-->
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <form class="form-signin" method="POST" action="/login">
+    <h2 class="form-signin-heading" style="margin-top: 6em;">Please sign in</h2>
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.username) }}
+    {{ wtf.form_field(form.password) }}
+    {{ wtf.form_field(form.remember) }}
+    {% if msg %}
+    <div class="alert alert-danger">{{ msg }}</div>
+    {% endif %}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  </form>
+
+</div> <!-- /container -->
+
+<footer class="navbar-fixed-bottom">
+  <div
+      class="container-fluid">
+      <!-- Left -->
+      <div class="col-md-3"></div>
+      <div class="text-center col-md-6">
+          <!-- Declaration -->
+          <p>
+              This service is run transparently from
+              <a href="https://github.com/Bayes-Cluster/Code-Hub">
+                  <span style="color:rgb(121, 121, 121)">
+                      Bayes-Cluster/Code-Hub
+                  </span>
+              </a>
+          </p>
+          <p>Copyright &copy; 2018-
+              <script>document.write(new Date().getFullYear())</script>
+              <a href="https://dst.uic.edu.cn/stat_en/"> <span style="color:rgb(121, 121, 121)"> <i
+                          class="fab fa-github-square"></i> BNU-HKBU UIC STAT</span> </a> &
+              <a href="https://github.com/Bayes-Cluster"> <span style="color:rgb(121, 121, 121)">USBC Maintenance Group</span>
+              </a>
+          </p>
+      </div>
+      <div class="col-md-3"></div>
+  </div>
+</footer>
+
 {% endblock %}

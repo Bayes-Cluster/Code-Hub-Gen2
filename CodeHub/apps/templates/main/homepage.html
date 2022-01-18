@@ -1,0 +1,137 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+USBC | Home
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='css/dashboard.css')}}">
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('authentication_blueprint.homepage') }}">BNU-HKBU United International College Statistics Bayes Cluster Code-Hub</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ url_for('authentication_blueprint.login', token=token) }}">Log In</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div></div>
+                <center>
+                    <p></p>
+                    <h4 style="margin-top:6em;"> Acknowledgement </h4>
+                    <img src="https://uic.edu.cn/img/logo.png" alt="BNU-HKBU UIC">
+                    <p></p>
+                    <img src="https://dst.uic.edu.cn/isci/dfiles/9736/templates/uic_fpil/images/isci_banner.jpg" height="100" width="300" alt="ISCI">
+                    <p></p>
+                    <img src="https://i.loli.net/2021/07/19/jkZcxzwtlYVGF7U.jpg" alt="Four Points Innovation Center">
+                    <p></p>
+                    <img src="https://bicmr.pku.edu.cn/images/logo.png" width="70%" alt="PKU BICMR">
+                    <p></p>
+                    <img src="https://i.loli.net/2021/07/19/mlAySvGfLW8ucIO.png" width="30%" alt="Statistics Programme">
+                </center>
+
+        </div>
+        <div class="col-md-6 main">
+            <p>
+                <strong>
+                    <span class="badge badge-wrining">This website is in testing <i class="fa-solid fa-wifi-exclamation"></i></span> 
+                </strong>
+            </p>
+            <h2 class="sub-header"> What is UIC-STAT Bayes Cluster </h2>
+            <div class="row placeholders">
+                <p style="margin:2em; text-align: left;">
+                    UIC-STAT Bayes Cluster, or USBC, is the first generation high-performance
+                    computing cluster in Statistics program, which provides high-performance 
+                    computing services for both students and teachers in Statistics Program. 
+                    The user can run the pre-built software, such as GCC, MATLAB, Anaconda etc. 
+                    on the cluster. The cluster brings the power of efficiency to groups of 
+                    users.It gives users access to computational environments and resources 
+                    without burdening the users with enviornment maintenance - and it can 
+                    get their work done in their own workspaces on shared resources, which can be managed
+                    efficiently by system administrators. For more information, please check our
+                    <a href="https://hpc.uicstat.com:8443/wiki"> wiki </a>
+                </p>
+            </div>
+
+            <h2 class="sub-header"> What is Code-Hub? </h2>
+            <div class="row placeholders">
+                <p style="margin:2em; text-align: left">
+                    For the Gen-1 Code-Hub, we used <a href="https://github.com/jupyterhub/jupyterhub">JupyterHub</a>
+                    as the web Portal and the user can use a web-based
+                    <a href="https://github.com/cdr/code-server">VS Code</a> as their GUI.
+                    Previously, the cluster user needs to access the Cluster via SSH, and most
+                    of the users are not familiar with CLI. With this web-based system, the user
+                    can intuitively access to the system can do the coding, check files, and even
+                    submit, check and stop their SLURM jobs.
+                </p>
+                <p style="margin:2em; text-align: left">
+                    For the Gen-2 Code-Hub, we developed a web-based system based on one of the most popular web framework written in Python,
+                    <a href="https://flask.palletsprojects.com"><strong>Flask</strong></a>, which may allow us to integrate the platform
+                    with other infrastructure, such as <a href="https://www.openldap.org">OpenLDAP</a> and <a href="https://mariadb.org/">MariaDB</a>.
+
+
+                </p>
+            </div>
+
+            <h2 class="sub-header"> Who can use this service? </h2>
+            <div class="row placeholders">
+                <p style="margin:2em; text-align: left;">
+                    For now, only UIC-STAT students and researchers can apply an account, 
+                    if you fullfil the requirement, after completing the 
+                    <a href="https://shimo.im/forms/JcWGhwvdGVvHtpRd/fill?channel=UICSTAT"><strong>application form</strong></a>, we will create the account for
+                    you within three weekdays. 
+                </p>
+                <!--<iframe width="100%" height="500" src="https://shimo.im/forms/JcWGhwvdGVvHtpRd/fill" frameborder="0" scrolling="yes" allowfullscreen=""></iframe>-->
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</div>
+
+<footer class="navbar-fixed-bottom">
+    <div class="container-fluid">
+        <!-- Left -->
+        <div class="col-md-3"></div>
+        <div class="text-center col-md-6">
+            <!-- Declaration -->
+            <p>
+                This service is run transparently from
+                <a href="https://github.com/Bayes-Cluster/Code-Hub">
+                    <span style="color:rgb(121, 121, 121)">
+                        Bayes-Cluster/Code-Hub
+                    </span>
+                </a>
+            </p>
+            <p>Copyright &copy; 2018-
+                <script>document.write(new Date().getFullYear())</script>
+                <a href="https://dst.uic.edu.cn/stat_en/"> <span style="color:rgb(121, 121, 121)"> <i
+                            class="fab fa-github-square"></i> BNU-HKBU UIC STAT</span> </a> &
+                <a href="https://github.com/Bayes-Cluster"> <span style="color:rgb(121, 121, 121)">USBC Maintenance
+                        Group</span>
+                </a>
+            </p>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</footer>
+{% endblock %}

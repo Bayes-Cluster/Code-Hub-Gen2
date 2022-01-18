@@ -4,7 +4,9 @@
 ## Tech Stack
 
  * Frontend: [Bootstrap5](https://getbootstrap.com/)
-    * Data Dashboard: [Chart.js](https://www.chartjs.org/)
+    * Data Dashboard: [Chart.js](https://www.chartjs.org/) or [Plotly](https://plotly.com/)
+    * Editor: [Manacco Editor](https://microsoft.github.io/monaco-editor/)
+    * Web Terminal: [Xterm.js](https://xtermjs.org/)
  * Backend: [Flask](https://flask.palletsprojects.com/en/2.0.x/)
  * Database: [MariaDB](https://mariadb.org/)
 
@@ -22,6 +24,6 @@ Basically, the Code-Hub has(will have) these three main components:
     2. Auditing ([Asciinema](https://asciinema.org/))
     3. Auto Blocking (Crypto-mining and etc.)
 3. Web-based Coding Interface
-    1. Web Terminal ([WebSSH2](https://github.com/billchurch/WebSSH2) with `socketio`) - optional
+    1. Web Terminal ([Xterm.js](https://xtermjs.org/) with `socketio`) - optional
     2. Files Management (simple upload + download)
     2. Proxy Service (for `code-server`, `MATLAB`, `RStudio`, and etc.)
