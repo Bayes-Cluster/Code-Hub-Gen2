@@ -9,8 +9,8 @@ from flask_migrate import Migrate
 from sys import exit
 from decouple import config
 
-from apps.config import config_dict
-from apps import create_app, db, socketio
+from modules.config import config_dict
+from modules import create_app, db, socketio
 
 
 # WARNING: Don't run with debug turned on in production!
@@ -39,3 +39,6 @@ if DEBUG:
 if __name__ == "__main__":
     socketio.run(app, port=5000, host="127.0.0.1", debug=True)
     #app.run(port=5000)
+    """
+    to start: gunicorn --bind 127.0.0.1:5000 run:app
+    """

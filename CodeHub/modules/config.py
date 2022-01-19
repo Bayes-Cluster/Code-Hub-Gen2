@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import os
+import platform
 from decouple import config
 
 secret_key = '2zl0cJDDYy3FtChHu5U28Sn19aEXMj1Raz27Eld7gnU='# generate_secret(keylength=32)
@@ -21,7 +22,11 @@ class Config(object):
     child_pid = config("child_pid", None)
     MAIL_SUPPORT_EMAIL = config("MAIL_SUPPORT_EMAIL", "bayes@uicstat.com")
     # This will create a file in <app> FOLDER
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////' + os.path.join(basedir, 'db.sqlite3')
+    if platform.system() == "Windows":
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
+    elif platform.system() == "Linux":
+        SQLALCHEMY_DATABASE_URI = 'sqlite:////' + os.path.join(basedir, 'db.sqlite3')
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
 

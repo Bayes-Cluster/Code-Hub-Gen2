@@ -3,6 +3,3 @@ host = ldap.example.com
 port = 389
 use_ssl = false
 base = ou=people,dc=example,dc=com
-ldap_admin = admin
-ldap_admin_password = admin
-search_filter = uid={uid}

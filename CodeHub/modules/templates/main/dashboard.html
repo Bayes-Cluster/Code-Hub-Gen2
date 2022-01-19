@@ -1,0 +1,142 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+USBC | Dashboard
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="icon" href="http://uic.edu.cn/images/favicon.ico" type="img/x-ico">
+<link href="{{url_for('static', filename='css/dashboard.css')}}" rel="stylesheet" />
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.2.0.min.js"
+crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.2.0.min.js"
+crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.2.0.min.js"
+crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+        aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('authentication_blueprint.homepage') }}">BNU-HKBU UIC STAT Computing Cluster</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Settings</a></li>
+        <li><a href="#">Profile</a></li>
+        <li><a href="{{ url_for('authentication_blueprint.logout', token=token) }}">Log Out</a></li>
+      </ul>
+      <!--<form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>-->
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <label>Cluster Status</label>
+      <ul class="nav nav-sidebar">
+        <li class="active" data-toggle="tooltip" data-placement="top" title="Check the Cluster status">
+          <a href="#">System Overview <span class="sr-only">(current)</span></a>
+        </li>
+        <li data-toggle="tooltip" data-placement="top" title="Check your SLRUM jobs">
+          <a href="{{ url_for('dashboard_blueprint.slurm_status', token=token) }}">SLURM status</a>
+        </li>
+        <li><a href="#">Reports</a></li>
+      </ul>
+      <label>Tookits</label>
+      <ul class="nav nav-sidebar">
+        <li><a href="#">File Editor</a></li>
+        <li><a href="#">Others</a></li>
+      </ul>
+      <label>HOWTO</label>
+      <ul class="nav nav-sidebar">
+        <li><a href="#">Documentation</a></li>
+        <li><a href="#">Issue Reporting</a></li>
+      </ul>
+      <label>Others</label>
+      <ul class="nav nav-sidebar">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Acknowledgement</a></li>
+      </ul>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <h1 class="page-header">Welcome, {{ name }}</h1>
+      <h2 class="sub-header"> System Status </h2>
+      <div class="row placeholders">
+        <div class="col-xs-6 col-sm-3 placeholder">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
+            height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+          <h4>Label</h4>
+          <span class="text-muted">Something else</span>
+        </div>
+        <div class="col-xs-6 col-sm-3 placeholder">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
+            height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+          <h4>Label</h4>
+          <span class="text-muted">Something else</span>
+        </div>
+        <div class="col-xs-6 col-sm-3 placeholder">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
+            height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+          <h4>Label</h4>
+          <span class="text-muted">Something else</span>
+        </div>
+        <div class="col-xs-6 col-sm-3 placeholder">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
+            height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+          <h4>Label</h4>
+          <span class="text-muted">Something else</span>
+        </div>
+      </div>
+
+      <h2 class="sub-header">GPU Status</h2>
+      <div class="container" style="text-align: center;">
+        {{ script1|safe }}
+        {{ div1|safe }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div
+      class="container-fluid">
+      <!-- Left -->
+      <div class="col-md-3"></div>
+      <div class="text-center col-md-6">
+          <!-- Declaration -->
+          <p>
+              This service is run transparently from
+              <a href="https://github.com/Bayes-Cluster/Code-Hub">
+                  <span style="color:rgb(121, 121, 121)">
+                      Bayes-Cluster/Code-Hub
+                  </span>
+              </a>
+          </p>
+          <p>Copyright &copy; 2018-
+              <script>document.write(new Date().getFullYear())</script>
+              <a href="https://dst.uic.edu.cn/stat_en/"> <span style="color:rgb(121, 121, 121)"> <i
+                          class="fab fa-github-square"></i> BNU-HKBU UIC STAT</span> </a> &
+              <a href="https://github.com/Bayes-Cluster"> <span style="color:rgb(121, 121, 121)">USBC Maintenance Group</span>
+              </a>
+          </p>
+      </div>
+      <div class="col-md-3"></div>
+  </div>
+</footer>
+{% endblock %}

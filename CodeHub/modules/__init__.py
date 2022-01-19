@@ -1,4 +1,4 @@
-from apps import *
+from modules import *
 from flask import Flask
 from flask_session import Session
 from importlib import import_module
@@ -22,7 +22,7 @@ def register_extensions(app):
 
 def register_blueprints(app):
     for module_name in ('authentication', 'dashboard'):
-        module = import_module('apps.{}.routes'.format(module_name))
+        module = import_module('modules.{}.routes'.format(module_name))
         app.register_blueprint(module.blueprint)
 
 

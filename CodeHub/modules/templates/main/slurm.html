@@ -10,6 +10,12 @@ USBC | Dashboard
 <link href="{{url_for('static', filename='css/dashboard.css')}}" rel="stylesheet" />
 <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.2.0.min.js"
+crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.2.0.min.js"
+crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.2.0.min.js"
+crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block content %}
@@ -44,11 +50,11 @@ USBC | Dashboard
     <div class="col-sm-3 col-md-2 sidebar">
       <label>Cluster Status</label>
       <ul class="nav nav-sidebar">
-        <li class="active" data-toggle="tooltip" data-placement="top" title="Check the Cluster status">
-          <a href="#">System Overview <span class="sr-only">(current)</span></a>
+        <li  data-toggle="tooltip" data-placement="top" title="Check the Cluster status">
+          <a href="{{ url_for('dashboard_blueprint.dashboard', token=token) }}">System Overview</a>
         </li>
-        <li data-toggle="tooltip" data-placement="top" title="Check your SLRUM jobs">
-          <a href="#">SLURM status</a>
+        <li class="active" data-toggle="tooltip" data-placement="top" title="Check your SLRUM jobs">
+          <a href="{{ url_for('dashboard_blueprint.slurm_status', token=token) }}">SLURM status<span class="sr-only">(current)</span></a>
         </li>
         <li><a href="#">Reports</a></li>
       </ul>
@@ -69,38 +75,9 @@ USBC | Dashboard
       </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <h1 class="page-header">Welcome, {{ name }}</h1>
       <h2 class="sub-header"> System Status </h2>
-      <div class="row placeholders">
-        <div class="col-xs-6 col-sm-3 placeholder">
-          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
-            height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-          <h4>Label</h4>
-          <span class="text-muted">Something else</span>
-        </div>
-        <div class="col-xs-6 col-sm-3 placeholder">
-          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
-            height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-          <h4>Label</h4>
-          <span class="text-muted">Something else</span>
-        </div>
-        <div class="col-xs-6 col-sm-3 placeholder">
-          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
-            height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-          <h4>Label</h4>
-          <span class="text-muted">Something else</span>
-        </div>
-        <div class="col-xs-6 col-sm-3 placeholder">
-          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
-            height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-          <h4>Label</h4>
-          <span class="text-muted">Something else</span>
-        </div>
-      </div>
-
-      <h2 class="sub-header">GPU Status</h2>
-      <div class="container" style="text-align: center;">
-        <p>Place holder</p>
+        {{ script1|safe }}
+        {{ div1|safe }}
       </div>
     </div>
   </div>

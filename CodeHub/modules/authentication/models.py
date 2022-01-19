@@ -4,9 +4,9 @@ Database for validate user token
 import os, base64
 import onetimepass
 from flask_login import UserMixin
-from apps import db, login_manager
+from modules import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
-#from apps.authentication.util import hash_pass
+#from modules.authentication.util import hash_pass
 
 
 class Users(db.Model, UserMixin):
@@ -23,8 +23,7 @@ class Users(db.Model, UserMixin):
         self.mfa_token = base64.b32encode(os.urandom(10)).decode('utf-8')
 
     def get_totp_uri(self):
-            return 'otpauth://totp/2FA-Demo:{0}?secret={1}&issuer=2FA-Demo' \
-                .format(self.username, self.mfa_token)
+            return "otpauth://totp/USBC-2FA:{0}?secret={1}&issuer=USBC".format(self.username, self.mfa_token)
     
     def auth_totp(self, mfa_token:str):
         return onetimepass.valid_totp(mfa_token, self.mfa_token)

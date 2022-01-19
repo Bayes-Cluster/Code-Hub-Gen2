@@ -3,17 +3,17 @@ import datetime
 import pyqrcode
 from io import BytesIO
 
-from apps.authentication import blueprint
-from apps.authentication.auth import *
-from apps.authentication.forms import *
-from apps.authentication.models import Users, HomeDirectory
+from modules.authentication import blueprint
+from modules.authentication.auth import *
+from modules.authentication.forms import *
+from modules.authentication.models import Users, HomeDirectory
 
 from flask import request
 from flask import redirect, url_for, flash
 from flask import Flask, jsonify, render_template, make_response
 
-from apps.utils.token import *
-from apps.config import secret_key, exp_time
+from modules.utils.token import *
+from modules.config import secret_key, exp_time
 """
 import os, base64
 generate secret key

@@ -1,10 +1,10 @@
 import jwt
 import datetime
 from functools import wraps
-from apps import authentication
-from apps.authentication.models import TokenBlocklist
-from apps import db
-from apps.config import secret_key, exp_time
+from modules import authentication
+from modules.authentication.models import TokenBlocklist
+from modules import db
+from modules.config import secret_key, exp_time
 from flask import render_template, request, jsonify, redirect, url_for, abort
 
 def token_required(f):
