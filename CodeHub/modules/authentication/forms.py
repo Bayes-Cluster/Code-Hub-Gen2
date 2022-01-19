@@ -37,10 +37,13 @@ class LoginForm(FlaskForm):
     remember = BooleanField(label="Remember Me", id="remember")
 
 
-class ModifyForm(FlaskForm):
-    old_password = PasswordField(label="Current Password",
-                                 id="old_password",
-                                 validator=[DataRequired()])
-    new_password = PasswordField(label="New Password",
-                                 id="new_password",
-                                 validators=[DataRequired()])
+class ProfileForm(FlaskForm):
+    """Profile Form"""
+    current_password = PasswordField(
+        label="",
+        id="current_password",
+        validator=[DataRequired()])
+    new_password = PasswordField(
+        label="",
+        id="new_password",
+        validator=[DataRequired()])
