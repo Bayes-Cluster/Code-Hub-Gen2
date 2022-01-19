@@ -29,4 +29,6 @@ Basically, the Code-Hub has(will have) these three main components:
     2. Proxy Service (for `code-server`, `MATLAB`, `RStudio`, and etc.)
 
 ## Badge
-![jwt](https://jwt.io/img/badge-compatible.svg) ![python-version](https://img.shields.io/badge/python-v3.7-blue) ![flask](https://flask.palletsprojects.com/en/2.0.x/_static/flask-icon.png)
+![python-version](https://img.shields.io/badge/python-v3.7-blue)
+<img src="https://jwt.io/img/badge-compatible.svg" alt="drawing" width="150"/>
+<img src="https://flask.palletsprojects.com/en/2.0.x/_static/flask-icon.png" alt="drawing" width="50"/>
