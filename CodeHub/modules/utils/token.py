@@ -80,8 +80,9 @@ def token_revoked(token:str=None):
 def check_token_revoke(f):
     @wraps(f)
     def decorator(*args, **kwargs):
-        token = request.args.get('token')
-        if token_revoked(token):
+        access_token = request.args.get('token')
+        refresh_token = request.cookies.get("token")
+        if token_revoked(access_token) or token_revoked(refresh_token) or check_token_expired(access_token) or check_token_expired(refresh_token):
             return redirect(url_for("authentication_blueprint.login"))
         return f(*args, **kwargs)
     return decorator
