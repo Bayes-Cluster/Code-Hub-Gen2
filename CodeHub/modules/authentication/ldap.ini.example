@@ -1,0 +1,5 @@
+[ldap]
+host = ldap.example.com
+port = 389
+use_ssl = false
+base = ou=people,dc=example,dc=com
