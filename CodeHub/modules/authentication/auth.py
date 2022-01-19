@@ -7,7 +7,7 @@ from ldap3 import Connection, Server, SIMPLE, SUBTREE, SYNC, Reader, ObjectDef
 BASE_DIR = os.path.dirname(__file__)
 __SETTINGS_PATH__ =os.path.join(BASE_DIR, "ldap.ini")
 
-def get_config():
+def get_ldap_conf():
     config = ConfigParser()
     config.read(__SETTINGS_PATH__)
     return config
@@ -33,7 +33,7 @@ def find_usermail_dn(conf, conn, uid):
     return conn.response[0]['dn'] if conn.response else None
 
 def find_user_directory(uid):
-    config = get_config()["ldap"]
+    config = get_ldap_conf()["ldap"]
     base = config["base"]
     with connect_ldap(config) as c:
         obj_person = ObjectDef(['person', 'posixAccount'], c)
@@ -43,7 +43,7 @@ def find_user_directory(uid):
 
 
 def auth_ldap(username, password, mail:bool=False):
-    config = get_config()["ldap"]
+    config = get_ldap_conf()["ldap"]
     with connect_ldap(config, client_strategy=SYNC) as c:
         c.bind()
         try:
@@ -66,7 +66,7 @@ def auth_ldap(username, password, mail:bool=False):
 
 
 def change_password_ldap(username, old_pass, new_pass):
-    config = get_config()["ldap"]
+    config = get_ldap_conf()["ldap"]
     with connect_ldap(config) as c:
         c.bind()
         try:
