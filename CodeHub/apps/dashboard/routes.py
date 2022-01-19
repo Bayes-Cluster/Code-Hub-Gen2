@@ -16,8 +16,11 @@ from apps.utils.token import *
 from apps.config import secret_key, exp_time
 
 @blueprint.route("/dashboard")
+@token_renew
 @token_required
-def dashboard():
+@check_token_revoke
+def dashboard(token):
+    token = token
     username = request.cookies.get('username')
     return render_template('main/dashboard.html', name=username, token=request.args["token"])
 

@@ -9,7 +9,7 @@ login_manager = LoginManager()
 socketio = SocketIO()
 
 blueprint = Blueprint(
-    'main_blueprint',
+    'dashboard_blueprint',
     __name__,
     template_folder="templates",
     static_folder="static",

@@ -6,6 +6,7 @@ USBC | Home
 
 {% block styles %}
 {{super()}}
+<link rel="icon" href="http://uic.edu.cn/images/favicon.ico" type="img/x-ico">
 <link rel="stylesheet" href="{{url_for('static', filename='css/dashboard.css')}}">
 <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 {% endblock %}
@@ -25,7 +26,15 @@ USBC | Home
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ url_for('authentication_blueprint.login', token=token) }}">Log In</a></li>
+                <li>
+                    {% if username %}
+                    <a href="{{ url_for('dashboard_blueprint.dashboard', token=token) }}">
+                        Hello <span>{{ username }}</span>
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('authentication_blueprint.login', token=token) }}">Login</a>
+                    {% endif %}
+                </li>
             </ul>
         </div>
     </div>

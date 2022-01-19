@@ -1,14 +1,15 @@
-from distutils.log import Log
 import jwt
 import datetime
+import pyqrcode
+from io import BytesIO
 
 from apps.authentication import blueprint
 from apps.authentication.auth import *
 from apps.authentication.forms import *
-from apps.authentication.models import Users
+from apps.authentication.models import Users, HomeDirectory
 
 from flask import request
-from flask import redirect, url_for, session
+from flask import redirect, url_for, flash
 from flask import Flask, jsonify, render_template, make_response
 
 from apps.utils.token import *
@@ -23,7 +24,48 @@ def generate_secret():
 
 @blueprint.route('/')
 def homepage():
-    return render_template("main/homepage.html")#redirect(url_for('authentication_blueprint.login'))
+    if check_token_expired(request.cookies.get("token")) == False:
+        access_token = token_generate(
+            access=True, data={"username": request.cookies.get("username")})
+        return render_template("main/homepage.html",
+                               username=request.cookies.get("username"),
+                               token=access_token)
+    else:
+        return render_template("main/homepage.html")
+
+    return render_template(
+        "main/homepage.html"
+    )  #redirect(url_for('authentication_blueprint.login'))
+
+
+@blueprint.route("/register", methods=["GET", "POST"])
+def register():
+    register_form = RegisterForm(request.form)
+    if request.method == "POST":
+        username = register_form.username.data
+        password = register_form.password.data
+        user = Users.query.filter_by(username=username).first()
+        if user is not None:
+            msg = "Username already exists"
+            return redirect(url_for("authentication_blueprint.login", msg=msg))
+        else:
+            if username == "" and password == "":
+                msg = "Username and password are required"
+                return render_template("accounts/register.html", msg=msg)
+            if "@" in username:
+                verification = auth_ldap(username, password, mail=True)
+            else:
+                verification = auth_ldap(username, password, mail=False)
+            if verification:
+                user = Users(username=username, password=password)
+                db.session.add(user)
+                db.session.commit()
+                return redirect(
+                    url_for("authentication_blueprint.mfa", username=username))
+            else:
+                flash("Username or password is incorrect")
+                return redirect(url_for("authentication_blueprint.register"))
+    return render_template("accounts/register.html", form=register_form)
 
 
 @blueprint.route("/login", methods=["GET", "POST"])
@@ -31,8 +73,10 @@ def login():
     msg = None
     login_form = LoginForm(request.form)
     if request.method == "POST":
-        username = request.form['username']
-        password = request.form['password']
+        username = login_form.username.data
+        password = login_form.password.data
+        mfa_token = login_form.mfa_token.data
+
         if username == "" and password == "":
             msg = "Username and password are required"
             return render_template("accounts/login.html", msg=msg)
@@ -41,17 +85,27 @@ def login():
         else:
             verification = auth_ldap(username, password, mail=False)
         if verification == True:
-            access_token = token_generate(access=True, secret_key=secret_key, data={"username": username})
-            refresh_token = token_generate(access=False, secret_key=secret_key, data={"username": username})
-            resp = make_response(redirect("dashboard?token={}".format(access_token)))
-            resp.set_cookie('token', refresh_token)
-            resp.set_cookie("password", "{}".format(password)) ## warning: this is not secure
-            user_form = Users(username=username,
-                              token=refresh_token,
-                              token_expiration=False)
-            db.session.add(user_form)
-            db.session.commit()
-            return resp
+            access_token = token_generate(access=True,
+                                          data={"username": username})
+            refresh_token = token_generate(access=False,
+                                           data={"username": username})
+            home_directory = find_user_directory(uid=username)
+            resp = make_response(
+                redirect(
+                    url_for("dashboard_blueprint.dashboard",
+                            token=access_token)))
+            resp.set_cookie("token", refresh_token)
+            resp.set_cookie("username", username)
+            #resp.set_cookie("password", "{}".format(password)) ## warning: this is not secure
+            user = Users.query.filter_by(
+                username=login_form.username.data).first()
+            verification_mfa = user.auth_totp(mfa_token=mfa_token)
+            if verification_mfa:
+                user_form = HomeDirectory(username=username,
+                                          homepath=home_directory)
+                db.session.add(user_form)
+                db.session.commit()
+                return resp
         else:
             msg = "Invalid username or password"
             return render_template("accounts/login.html",
@@ -60,39 +114,43 @@ def login():
     return render_template("accounts/login.html", msg=msg, form=login_form)
 
 
-@blueprint.route("/profile", methods=["GET", "POST"])
-@token_required
-def profile(*args):
-    token = request.args['token']
-    username = jwt.decode(token, secret_key, algorithms=["HS256"])["username"]
-    username = request.cookies.get('username')
-    old_password = request.form.get("old_password")
-    new_password = request.form.get("new_password")
-    if old_password == None or new_password == None or old_password == new_password:
-        msg = "Invlid password or new password is same as current password"
-        modify_result = False
-        return render_template("accounts/profile.html",
-                               modify_result=False,
-                               msg=msg)
-    modify_result = change_password_ldap(username, old_password, new_password)
-    if modify_result == True:
-        return redirect("/logout?token={}".format(token))
-    else:
-        msg = "Invalid password, please re enter"
-        return render_template("accounts/profile.html", msg=msg)
+@blueprint.route("/mfa")
+@check_token_revoke
+def mfa():
+    username = request.args["username"]
+    return render_template("accounts/mfa.html", username=username)
 
-    return render_template("accounts/profile.html", msg=username)
+
+@blueprint.route("/qrcode")
+def qrcode():
+    username = request.cookies.get("username")
+    user = Users.query.filter_by(username=username).first()
+    if user is None:
+        abort(404)
+    url = pyqrcode.create(user.get_totp_uri())
+    stream = BytesIO()
+    url.svg(stream, scale=3)
+    return stream.getvalue(), 200, {
+        'Content-Type': 'image/svg+xml',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    }
 
 
 ## TODO: Design a database for user and store token whether the token is valid or not
 @blueprint.route("/logout", methods=["GET", "POST"])
 @token_required
 def logout(*args):
-    token = request.args["token"]
-    username = jwt.decode(token, secret_key, algorithms=["HS256"])["username"]
-    user_form = Users.query.filter_by(token=token).first()
-    user_form.token_expiration = True
+    access_token = request.args["token"]
+    refresh_token = request.cookies.get("token")
+    db.session.add(
+        TokenBlocklist(type="access",
+                       token=access_token,
+                       create_time=datetime.datetime.now()))
+    db.session.add(
+        TokenBlocklist(type="refresh",
+                       token=refresh_token,
+                       create_time=datetime.datetime.now()))
     db.session.commit()
-    resp = make_response(redirect("login"))
-    resp.set_cookie("username", "", expires=0)
     return redirect(url_for('authentication_blueprint.login'))

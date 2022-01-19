@@ -1,27 +1,30 @@
 import jwt
 import datetime
 from functools import wraps
-from CodeHub.apps import authentication
+from apps import authentication
+from apps.authentication.models import TokenBlocklist
+from apps import db
 from apps.config import secret_key, exp_time
-from flask import request, jsonify, redirect, url_for, abort
+from flask import render_template, request, jsonify, redirect, url_for, abort
 
 def token_required(f):
     @wraps(f)
-    def decorated(*args, **kwargs):
+    def decorator(*args, **kwargs):
         token = request.args.get('token')
 
         if not token:
-            msg = "Token is invlid"
-            return redirect(url_for("authentication_blueprint.login", msg = msg))
+            msg = "Token is missing, please login again"
+            return render_template("accounts/login.html", msg=msg)
 
         try: 
             data = jwt.decode(token, secret_key, algorithms=["HS256"])
         except:
-            return jsonify({'message' : 'Token is invalid!'}), 403
+            msg = "Token is invlid, please login again!"
+            return redirect(url_for("authentication_blueprint.login", msg=msg))
 
         return f(*args, **kwargs)
 
-    return decorated
+    return decorator
 
 def token_generate(access:bool=True, data:dict=None):
     if access == True:
@@ -39,15 +42,48 @@ def token_generate(access:bool=True, data:dict=None):
         }, secret_key, algorithm="HS512")
         return token
 
-def token_renew():
-    username = request.cookies.get('username')
-    refresh_token = request.cookies.get('refresh_token')
+def token_renew(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        username = request.cookies.get("username")
+        refresh_token = request.cookies.get("token")
+        access_token = request.args["token"]
+        check_access_exp = check_token_expired(access_token)
+        if check_access_exp: 
+            try:
+                token_info = jwt.decode(refresh_token, secret_key, algorithms=["HS512"])["username"]
+            except:
+                return redirect(url_for("authentication_blueprint.login"))
+            if token_info == username:
+                access_token = token_generate(access=True, data={"username": username})
+            else:
+                return redirect(url_for("authentication_blueprint.login"))
+        else:
+            access_token = access_token
+        return f(*args, **kwargs, token=access_token)
+    return decorator
+
+def check_token_expired(token):
     try:
-        token_info = jwt.decode(refresh_token, secret_key, algorithms=["HS512"])
+        data = jwt.decode(token, secret_key, algorithms=["HS512"])
     except:
-        abort(403)
-    if token_info == username:
-        access_token = token_generate(access=True, data={"username": username})
-        return access_token
+        return True
+    if data["exp"] < datetime.datetime.utcnow().timestamp():
+        return True
     else:
-        return redirect(url_for("authentication_blueprint.login"))
+        return False
+
+def token_revoked(token:str=None):
+    revoked = db.session.query(TokenBlocklist.id).filter(TokenBlocklist.token == token).scalar()
+    return revoked
+
+def check_token_revoke(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token = request.args.get('token')
+        if token_revoked(token):
+            return redirect(url_for("authentication_blueprint.login"))
+        return f(*args, **kwargs)
+    return decorator
+
+

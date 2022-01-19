@@ -1,0 +1,67 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block styles %}
+{{super()}}
+<style>
+  .control-label {display: none;}
+</style>
+<link rel="icon" href="http://uic.edu.cn/images/favicon.ico" type="img/x-ico">
+<link href="{{url_for('static', filename='css/login.css')}}" rel="stylesheet" >
+<link href="{{url_for('static', filename='css/dashboard.css')}}" rel="stylesheet" />
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <form class="form-signin" method="POST" action="">
+    <h2 class="form-signin-heading" style="margin-top: 4em; margin-bottom: 1em; text-align: center;">Registeration</h2>
+    <span class="badge badge-pill badge-primary">Notice</span>
+        <p>Please ensure you have any OTP applictions installed on your device, for example
+            <a href="https://www.ndkey.com/">
+                ndkey
+            </a>
+            , as you will need it to complete your registration.  
+        </p>
+    {{ form.hidden_tag() }}
+    <label><i class="fas fa-id-card"></i> Username or Email</label>
+    {{ wtf.form_field(form.username) }}
+    <label><i class="fas fa-unlock-alt"></i> Password </label>
+    {{ wtf.form_field(form.password) }}
+    {% if msg %}
+    <div class="alert alert-danger">{{ msg }}</div>
+    {% endif %}
+    <button class="btn btn-lg btn-primary btn-block" type="submit" id="register">Sign up</button>
+  </form>
+
+</div> <!-- /container -->
+
+<footer class="navbar-fixed-bottom">
+  <div
+      class="container-fluid">
+      <!-- Left -->
+      <div class="col-md-3"></div>
+      <div class="text-center col-md-6">
+          <!-- Declaration -->
+          <p>
+              This service is run transparently from
+              <a href="https://github.com/Bayes-Cluster/Code-Hub">
+                  <span style="color:rgb(121, 121, 121)">
+                      Bayes-Cluster/Code-Hub
+                  </span>
+              </a>
+          </p>
+          <p>Copyright &copy; 2018-
+              <script>document.write(new Date().getFullYear())</script>
+              <a href="https://dst.uic.edu.cn/stat_en/"> <span style="color:rgb(121, 121, 121)"> <i
+                          class="fab fa-github-square"></i> BNU-HKBU UIC STAT</span> </a> &
+              <a href="https://github.com/Bayes-Cluster"> <span style="color:rgb(121, 121, 121)">USBC Maintenance Group</span>
+              </a>
+          </p>
+      </div>
+      <div class="col-md-3"></div>
+  </div>
+</footer>
+
+{% endblock %}

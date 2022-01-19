@@ -1,0 +1,68 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}
+USBC | 2-Factor Authentication
+{% endblock %}
+
+
+{% block styles %}
+{{super()}}
+<link rel="icon" href="http://uic.edu.cn/images/favicon.ico" type="img/x-ico">
+<link href="{{url_for('static', filename='css/login.css')}}" rel="stylesheet">
+<link href="{{url_for('static', filename='css/dashboard.css')}}" rel="stylesheet" />
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('authentication_blueprint.homepage') }}">BNU-HKBU United
+                International College Statistics Bayes Cluster Code-Hub</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    {% if username %}
+                    <a href="{{ url_for('dashboard_blueprint.dashboard', token=token) }}">
+                        Welcome, <span style="color: whitesmoke;">{{ username }}</span>
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('authentication_blueprint.login', token=token) }}">Login</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <h2 style="margin-top: 4em; margin-bottom: 1em;">海内存知己，天涯若比邻</h2>
+        <a href="https://www.bu.edu/tech/support/information-security/why-use-2fa/" target="_blank" data-toggle="tooltip"
+            data-placement="top" title="Why MFA is important?">
+            <span class="badge badge-pill badge-primary">Very
+                Important!
+            </span>
+        </a>
+        <p>You are almost done! Please start your OTP Application on your smartphone and scan the following QR Code with
+            it:
+        </p>
+        <center>
+            <p><img id="qrcode" src="{{ url_for('authentication_blueprint.qrcode') }}"></p>
+        </center>
+        <p> if your are finish scanning, go to <a href="{{ url_for('authentication_blueprint.login') }}">Login</a> page
+            and login to the platform.
+            Enjoy yourself</p>
+    </div>
+    <div class=col-md-3></div>
+</div>
+{% endblock %}

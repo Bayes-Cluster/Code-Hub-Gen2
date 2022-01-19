@@ -1,7 +1,7 @@
 import os
 import json
 from configparser import ConfigParser
-from ldap3 import Connection, Server, SIMPLE, SUBTREE, SYNC
+from ldap3 import Connection, Server, SIMPLE, SUBTREE, SYNC, Reader, ObjectDef
 
 
 BASE_DIR = os.path.dirname(__file__)
@@ -31,6 +31,15 @@ def find_usermail_dn(conf, conn, uid):
     search_filter = search_filter.replace('{mail}', uid)
     conn.search(conf['base'], "(%s)" % search_filter, SUBTREE)
     return conn.response[0]['dn'] if conn.response else None
+
+def find_user_directory(uid):
+    config = get_config()["ldap"]
+    base = config["base"]
+    with connect_ldap(config) as c:
+        obj_person = ObjectDef(['person', 'posixAccount'], c)
+        r = Reader(c, obj_person, base, "uid:={}".format(uid))
+        r.search()
+        return r[0]["homeDirectory"][0]
 
 
 def auth_ldap(username, password, mail:bool=False):
@@ -77,5 +86,4 @@ def change_password_ldap(username, old_pass, new_pass):
             return True
         except Exception as e:
             return False
-
 
