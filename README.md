@@ -57,8 +57,9 @@ GRANT ALL PRIVILEGES ON codehub. * TO 'codehub'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-## Badge
-![python-version](https://img.shields.io/badge/python-v3.7-blue)
-<img src="https://jwt.io/img/badge-compatible.svg" alt="jwt" width="150"/>
-<img src="https://flask.palletsprojects.com/en/2.0.x/_static/flask-icon.png" alt="flask" width="50"/>
-<img src="https://mariadb.com/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/2019/11/mariadb-logo_black-transparent-300x75.png.webp" alt="mariadb" width="100"/>
+## Acknowledgement
+* <img src="https://uic.edu.cn/img/logo.png" alt="BNU-HKBU United International College" width="150"/>
+* ![python-version](https://img.shields.io/badge/python-v3.7-blue)
+* <img src="https://jwt.io/img/badge-compatible.svg" alt="jwt" width="150"/>
+* <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Flask_logo.svg/460px-Flask_logo.svg.png" alt="flask" width="150"/>
+* <img src="https://mariadb.com/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/2019/11/mariadb-logo_black-transparent-300x75.png.webp" alt="mariadb" width="150"/>
