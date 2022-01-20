@@ -52,8 +52,10 @@ USBC | Sign In
     <label><i class="fas fa-fingerprint"></i> Multi-Factor Authentication</label>
     {{ wtf.form_field(form.mfa_token) }}
     <p>
-      Forget your password or your MFA token? Please contact us at <a
-        href="mailto:bayes@uicstat.com">bayes@uicstat.com</a>
+      Forget your password or MFA token? Please contact <a href="mailto:bayes@uicstat.com">us.</a>
+    </p>
+    <p>
+      Do not has a valid account? Please <a href="{{ url_for('authentication_blueprint.register') }}"> register</a>.
     </p>
     {{ wtf.form_field(form.remember) }}
     {% if msg %}

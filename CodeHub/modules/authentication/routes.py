@@ -115,7 +115,6 @@ def login():
 
 
 @blueprint.route("/mfa")
-@check_token_revoke
 def mfa():
     username = request.args["username"]
     return render_template("accounts/mfa.html", username=username)
@@ -123,7 +122,7 @@ def mfa():
 
 @blueprint.route("/qrcode")
 def qrcode():
-    username = request.cookies.get("username")
+    username = request.args["username"]
     user = Users.query.filter_by(username=username).first()
     if user is None:
         abort(404)

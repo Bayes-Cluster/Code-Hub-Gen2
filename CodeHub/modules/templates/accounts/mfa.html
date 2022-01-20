@@ -57,7 +57,7 @@ USBC | 2-Factor Authentication
             it:
         </p>
         <center>
-            <p><img id="qrcode" src="{{ url_for('authentication_blueprint.qrcode') }}"></p>
+            <p><img id="qrcode" src="{{ url_for('authentication_blueprint.qrcode', username=username) }}"></p>
         </center>
         <p> if your are finish scanning, go to <a href="{{ url_for('authentication_blueprint.login') }}">Login</a> page
             and login to the platform.
