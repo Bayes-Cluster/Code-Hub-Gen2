@@ -8,7 +8,7 @@ from flask_wtf import FlaskForm
 from modules import authentication
 from modules.authentication import *
 from modules.authentication.models import *
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 
 
@@ -33,7 +33,7 @@ class LoginForm(FlaskForm):
                              validators=[DataRequired()])
     mfa_token = PasswordField(label="",
                               id="mfa_token",
-                              validators=[DataRequired()])
+                              validators=[DataRequired(), Length(6,6)])
     remember = BooleanField(label="Remember Me", id="remember")
 
 

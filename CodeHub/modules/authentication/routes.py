@@ -153,4 +153,7 @@ def logout(*args):
                        token=refresh_token,
                        create_time=datetime.datetime.now()))
     db.session.commit()
+    resp = make_response(redirect(url_for("authentication_blueprint.login")))
+    resp.set_cookie("token", "", expires=0)
+    resp.set_cookie("username", "", expires=0)
     return redirect(url_for('authentication_blueprint.login'))

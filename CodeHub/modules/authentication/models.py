@@ -5,6 +5,7 @@ import os, base64
 import onetimepass
 from flask_login import UserMixin
 from modules import db, login_manager
+from wtforms.validators import Length
 from werkzeug.security import generate_password_hash, check_password_hash
 #from modules.authentication.util import hash_pass
 
