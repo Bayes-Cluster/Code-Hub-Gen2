@@ -1,6 +1,9 @@
 # Code-Hub-Gen2
 
-![python-version](https://img.shields.io/badge/python-v3.7-blue)
+![python-version](https://img.shields.io/badge/python-v3.7.11-orange)
+![flask](https://img.shields.io/badge/Flask-v2.0.1-green)
+![Werkzeug](https://img.shields.io/badge/Werkzeug-v2.0.1-blue)
+![MariaDB](https://img.shields.io/badge/MariaDB-v10.3.32-brightgreen)
 
 ## Tech Stack
 
@@ -59,7 +62,10 @@ FLUSH PRIVILEGES;
 ```
 
 ## Acknowledgement
-* <img src="images/uic.png" alt="BNU-HKBU United International College" width="200"/>
-* <img src="https://jwt.io/img/badge-compatible.svg" alt="jwt" width="200"/>
-* <img src="images/flask.png" alt="flask" width="200"/>
-* <img src="images/mariadb.png.webp" alt="mariadb" width="200"/>
+<img src="images/uic.png" alt="BNU-HKBU United International College" width="200"/>
+
+<img src="https://jwt.io/img/badge-compatible.svg" alt="jwt" width="200"/>
+
+<img src="images/flask.png" alt="flask" width="200"/>
+
+<img src="images/mariadb.png.webp" alt="mariadb" width="200"/>
