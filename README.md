@@ -58,7 +58,7 @@ FLUSH PRIVILEGES;
 ```
 
 ## Acknowledgement
-* <img src="uic.png" alt="BNU-HKBU United International College" width="150"/>
+* <img src="images/uic.png" alt="BNU-HKBU United International College" width="150"/>
 * ![python-version](https://img.shields.io/badge/python-v3.7-blue)
 * <img src="https://jwt.io/img/badge-compatible.svg" alt="jwt" width="150"/>
 * <img src="images/flask.png" alt="flask" width="150"/>
