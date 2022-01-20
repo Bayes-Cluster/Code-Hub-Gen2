@@ -1,0 +1,15 @@
+[ldap]
+host = ldap.example.com
+port = 389
+use_ssl = false
+base = ou=people,dc=example,dc=com
+search_filter = uid={uid}
+
+[db]
+[db]
+db_engine = mysql
+db_username = username
+db_password = password
+db_host = localhost
+db_port = 3306
+db_name = codehub

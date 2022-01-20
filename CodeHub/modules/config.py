@@ -6,6 +6,16 @@ Copyright (c) 2019 - present AppSeed.us
 import os
 import platform
 from decouple import config
+from configparser import ConfigParser
+
+BASE_DIR = os.path.dirname(__file__)
+__SETTINGS_PATH__ = os.path.join(BASE_DIR, "config.ini")
+
+def get_db_conf():
+    config = ConfigParser()
+    config.read(__SETTINGS_PATH__)
+    return config
+
 
 secret_key = '2zl0cJDDYy3FtChHu5U28Sn19aEXMj1Raz27Eld7gnU='# generate_secret(keylength=32)
 exp_time = int(1800)
@@ -33,20 +43,18 @@ class Config(object):
 
 class ProductionConfig(Config):
     DEBUG = False
-
     # Security
     SESSION_COOKIE_HTTPONLY = True
     REMEMBER_COOKIE_HTTPONLY = True
     REMEMBER_COOKIE_DURATION = 3600
-
     # PostgreSQL database
     SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
-        config('DB_ENGINE', default='postgresql'),
+        config('DB_ENGINE', default='mariadb+mariadbconnector'),
         config('DB_USERNAME', default='codehub'),
-        config('DB_PASS', default='pass'),
+        config('DB_PASS', default='password'),
         config('DB_HOST', default='localhost'),
-        config('DB_PORT', default=5432),
-        config('DB_NAME', default='CodHub')
+        config('DB_PORT', default=3306),
+        config('DB_NAME', default='CodeHub')
     )
 
 
