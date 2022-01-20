@@ -28,7 +28,37 @@ Basically, the Code-Hub has(will have) these three main components:
     2. Files Management (simple upload + download)
     2. Proxy Service (for `code-server`, `MATLAB`, `RStudio`, and etc.)
 
+## Installation
+
+```bash
+git clone git@github.com:Bayes-Cluster/Code-Hub-Gen2.git
+cd Code-Hub-Gen2
+conda creaet -n CodeHub python=3.7
+python -m pip install -r requirements.txt
+gunicorn --bind 127.0.0.1:5000 run:app
+```
+
+For production, we choose MariaDB as the database:
+
+```bash
+sudo apt-get update        
+sudo apt-get install mariadb-server libmariadb3 libmariadb-dev
+python -m pip install mariadb
+```
+
+Then create a database called: CodeHub and user codehub:
+
+```bash 
+sudo maraidb -u root -p 
+
+CREATE DATABASE CodeHub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'codehub'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON codehub. * TO 'codehub'@'localhost';
+FLUSH PRIVILEGES;
+```
+
 ## Badge
 ![python-version](https://img.shields.io/badge/python-v3.7-blue)
-<img src="https://jwt.io/img/badge-compatible.svg" alt="drawing" width="150"/>
-<img src="https://flask.palletsprojects.com/en/2.0.x/_static/flask-icon.png" alt="drawing" width="50"/>
+<img src="https://jwt.io/img/badge-compatible.svg" alt="jwt" width="150"/>
+<img src="https://flask.palletsprojects.com/en/2.0.x/_static/flask-icon.png" alt="flask" width="50"/>
+<img src="https://mariadb.com/wp-content/webp-express/webp-images/doc-root/wp-content/uploads/2019/11/mariadb-logo_black-transparent-300x75.png.webp" alt="mariadb" width="100"/>
