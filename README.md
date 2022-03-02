@@ -5,6 +5,8 @@
 ![Werkzeug](https://img.shields.io/badge/Werkzeug-v2.0.1-blue)
 ![MariaDB](https://img.shields.io/badge/MariaDB-v10.3.32-brightgreen)
 
+*Develop with Codespace*
+
 ## Tech Stack
 
  * Frontend: [Bootstrap5](https://getbootstrap.com/)
